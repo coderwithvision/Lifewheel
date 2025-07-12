@@ -3,16 +3,9 @@
     "name": "Lifewheel",
     "slug": "lifewheel",
     "version": "1.0.0",
-    "sdkVersion": "50.0.0",
-    "platforms": ["ios", "android"],
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": ["**/*"]
+    "sdkVersion": "53.0.0",
+    "platforms": ["ios", "android", "web"],
+    // Remove or comment the line below if it’s causing the error
+    // "icon": "./assets/icon.png"
   }
 }
