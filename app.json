@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "Lifewheel",
+    "slug": "lifewheel",
+    "version": "1.0.0",
+    "sdkVersion": "50.0.0",
+    "platforms": ["ios", "android"],
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"]
+  }
+}

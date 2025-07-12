@@ -1,54 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
-import TaskItem from './components/TaskItem';
-import { loadTasks, saveTasks } from './utils/storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import LifeAreaItem from './components/LifeAreaItem';
 
 export default function App() {
-  const [task, setTask] = useState('');
-  const [tasks, setTasks] = useState([]);
+  const [lifeAreas, setLifeAreas] = useState([]);
+  const [newArea, setNewArea] = useState('');
 
   useEffect(() => {
-    loadTasks().then(setTasks);
+    const loadAreas = async () => {
+      const stored = await AsyncStorage.getItem('lifeAreas');
+      if (stored) setLifeAreas(JSON.parse(stored));
+    };
+    loadAreas();
   }, []);
 
-  useEffect(() => {
-    saveTasks(tasks);
-  }, [tasks]);
-
-  const addTask = () => {
-    if (task.trim()) {
-      setTasks([...tasks, { id: Date.now(), title: task, done: false }]);
-      setTask('');
-    }
-  };
-
-  const toggleDone = (id) => {
-    setTasks(tasks.map(t => t.id === id ? { ...t, done: !t.done } : t));
+  const addLifeArea = async () => {
+    if (!newArea.trim()) return;
+    const updated = [...lifeAreas, { id: Date.now().toString(), title: newArea }];
+    setLifeAreas(updated);
+    await AsyncStorage.setItem('lifeAreas', JSON.stringify(updated));
+    setNewArea('');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Task Manager</Text>
+      <Text style={styles.title}>Life Areas</Text>
       <TextInput
+        placeholder="Enter life area"
+        value={newArea}
+        onChangeText={setNewArea}
         style={styles.input}
-        value={task}
-        onChangeText={setTask}
-        placeholder="Enter new task"
       />
-      <Button title="Add Task" onPress={addTask} />
+      <Button title="Add Life Area" onPress={addLifeArea} />
       <FlatList
-        data={tasks}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <TaskItem task={item} onToggle={toggleDone} />
-        )}
+        data={lifeAreas}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <LifeAreaItem title={item.title} />}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20, marginTop: 40 },
-  heading: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
-  input: { borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 5 }
+  container: { flex: 1, padding: 20, marginTop: 50 },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+  input: {
+    borderWidth: 1, padding: 8, marginBottom: 10, borderRadius: 5,
+  },
 });
